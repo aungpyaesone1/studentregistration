@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("aps").password("$2a$10$iocQXcq813JUSKJUzYc4QOUY6QkR27TCfcubnnfeO7uaKJliA7rci").roles("USER");
+        auth.inMemoryAuthentication().withUser("aps").password("$2a$10$iocQXcq813JUSKJUzYc4QOUY6QkR27TCfcubnnfeO7uaKJliA7rci").roles("USER");//password=root
     }
 
     @Bean

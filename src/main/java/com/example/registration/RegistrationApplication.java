@@ -4,12 +4,10 @@ import com.example.registration.Config.CustomAnno;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
-import org.springframework.beans.factory.config.BeanDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.lang.annotation.Annotation;
@@ -21,17 +19,15 @@ public class RegistrationApplication{
 
 	public static void main(String[] args) {
 		SpringApplication.run(RegistrationApplication.class, args);
-
+		Logger log = LoggerFactory.getLogger(RegistrationApplication.class);
 		Reflections reflections1 = new Reflections("com.example.registration", new TypeAnnotationsScanner(), new SubTypesScanner());
 		Set<Class<?>> allClasses = reflections1.getTypesAnnotatedWith(CustomAnno.class);
-		System.out.println(allClasses.size());
-
 		for (Class clazz : allClasses) {
 			Annotation[] annotations = clazz.getAnnotations();
 			for (Annotation annotation : annotations) {
 				if (annotation instanceof CustomAnno) {
 					CustomAnno myAnnotation = (CustomAnno) annotation;
-					System.out.println("value: " + myAnnotation.name());
+					log.info(String.format("[name=%s, className=%s]",myAnnotation.name(),clazz.getName()));
 				}
 			}
 		}
