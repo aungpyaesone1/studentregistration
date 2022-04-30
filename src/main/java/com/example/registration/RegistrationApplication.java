@@ -21,13 +21,7 @@ public class RegistrationApplication{
 
 	public static void main(String[] args) {
 		SpringApplication.run(RegistrationApplication.class, args);
-		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
-		scanner.addIncludeFilter(new AnnotationTypeFilter(CustomAnno.class));
-		Set<BeanDefinition> definitions = scanner.findCandidateComponents("com.example.registration");
-		for(BeanDefinition b: definitions){
-			System.out.println(b.getBeanClassName());
-			System.out.println(b.getAttribute("name"));
-		}
+
 		Reflections reflections1 = new Reflections("com.example.registration", new TypeAnnotationsScanner(), new SubTypesScanner());
 		Set<Class<?>> allClasses = reflections1.getTypesAnnotatedWith(CustomAnno.class);
 		System.out.println(allClasses.size());
