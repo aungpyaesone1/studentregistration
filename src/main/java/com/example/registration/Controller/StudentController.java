@@ -106,4 +106,9 @@ public class StudentController {
         res.setSyskey(syskey);
         return ResponseEntity.ok().body(res);
     }
+
+    @GetMapping("test1")
+    public ResponseEntity<?> test1(){
+        return ResponseEntity.ok().body("Test1");
+    }
 }
