@@ -1,7 +1,7 @@
 package com.example.registration.Util;
 
-public class ResponseMessageEnum {
-    public enum ResponseStatus{
+public class ResponseEnum {
+    public enum ResponseMessage{
         SAVE_SUCCESS("Successfully Saved"),
         SAVE_FAIL("Save Fail"),
         UPDATE_SUCCESS("Successfully Updated"),
@@ -13,17 +13,30 @@ public class ResponseMessageEnum {
         FAIL("Fail"),
         INVALID_REQUEST("Invalid request");
 
-        String value;
+        private String message;
 
-        ResponseStatus (String value){
-            this.value = value;
+        ResponseMessage (String value){
+            this.message = value;
         }
 
-        public String getValue() {
-            return value;
+        public String message() {
+            return message;
         }
     }
     public enum ResponseCode{
+        SUCCESS("200"),
+        INVALID_REQUEST("400"),
+        SERVER_ERROR("500"),
+        UNKNOWN_ERROR("505"),
+        UNAUTHORIZED("401"),
+        NOT_FOUND("404");
 
+        private String code;
+        ResponseCode(String value){
+            this.code = value;
+        }
+        public String code(){
+            return code;
+        }
     }
 }

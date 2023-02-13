@@ -1,17 +1,22 @@
 package com.example.registration.Controller;
 
+import com.example.registration.Dto.BaseResponse;
+import com.example.registration.Dto.DataMap;
 import com.example.registration.Dto.StudentDto;
 import com.example.registration.Service.StudentService;
-import com.example.registration.Util.Setting;
+import com.example.registration.Util.ResponseEnum;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,40 +27,43 @@ public class StudentController {
 
     @PostMapping("")
     public ResponseEntity<?> saveStudent(@RequestBody StudentDto student){
-        Map<String, Object> res=new HashMap<String, Object>();
+        //Map<String, Object> res=new HashMap<String, Object>();
+        BaseResponse res = new BaseResponse();
         if(student == null){
-            res.put("status", Setting.invalid_request_code);
-            res.put("message", "Invalid object");
+            //res.put("status", Setting.invalid_request_code);
+            //res.put("message", "Invalid object");
+            res.setStatus_code(ResponseEnum.ResponseCode.INVALID_REQUEST.code());
+            res.setStatus_message(ResponseEnum.ResponseMessage.INVALID_REQUEST.message());
             return ResponseEntity.badRequest().body(res);
         }
         long syskey = studentService.saveStudent(student);
-        res.put("status", Setting.success_code);
-        res.put("message", "Successfully saved");
-        res.put("syskey", syskey);
+        res.setStatus_code(ResponseEnum.ResponseCode.SUCCESS.code());
+        res.setStatus_message(ResponseEnum.ResponseMessage.SAVE_SUCCESS.message());
+        res.setSyskey(syskey);
         return ResponseEntity.ok().body(res);
-
     }
 
     @GetMapping(path = "", produces = "application/json")
-    public ResponseEntity<?> getStudentList(){
-        Map<String, Object> res=new HashMap<String, Object>();
-        res.put("status", Setting.success_code);
-        res.put("data",studentService.getStudentList());
+    public ResponseEntity<?> getStudentList() throws JsonProcessingException {
+        BaseResponse res = new BaseResponse();
+        res.setStatus_code(ResponseEnum.ResponseCode.SUCCESS.code());
+        res.setStatus_message(ResponseEnum.ResponseMessage.SUCCESS.message());
+        res.setData(new DataMap<List>(studentService.getStudentList()).get());
         return ResponseEntity.ok().body(res);
     }
 
     @PutMapping(path = "")
     public ResponseEntity<?> updateStudent(@RequestBody StudentDto studentDto){
-        Map<String, Object> res=new HashMap<String, Object>();
+        BaseResponse res = new BaseResponse();
         if(!studentService.isExist(studentDto.getId(),1)){
-            res.put("status", Setting.invalid_request_code);
-            res.put("message", "Does not exist");
-            return ResponseEntity.badRequest().body(res);
+            res.setStatus_code(ResponseEnum.ResponseCode.NOT_FOUND.code());
+            res.setStatus_message(ResponseEnum.ResponseMessage.NOT_FOUND.message());
+            return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
         }
         long syskey = studentService.saveStudent(studentDto);
-        res.put("status", Setting.success_code);
-        res.put("message", "Successfully updated");
-        res.put("syskey", syskey);
+        res.setStatus_code(ResponseEnum.ResponseCode.SUCCESS.code());
+        res.setStatus_message(ResponseEnum.ResponseMessage.UPDATE_SUCCESS.message());
+        res.setSyskey(syskey);
         return ResponseEntity.ok().body(res);
     }
 
@@ -63,13 +71,13 @@ public class StudentController {
     public ResponseEntity<?> getStudent(@PathVariable long id){
         Map<String, Object> res=new HashMap<String, Object>();
         if(!studentService.isExist(id, 1)){
-            res.put("status", Setting.request_item_not_found_code);
-            res.put("message", "Does not exist");
-            return ResponseEntity.badRequest().body(res);
+            res.put("status", ResponseEnum.ResponseCode.NOT_FOUND.code());
+            res.put("message", ResponseEnum.ResponseMessage.NOT_FOUND.message());
+            return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
         }
         StudentDto student = studentService.getStudent(id);
-        res.put("status", Setting.success_code);
-        res.put("message", "Success");
+        res.put("status", ResponseEnum.ResponseCode.SUCCESS.code());
+        res.put("message", ResponseEnum.ResponseMessage.SUCCESS.message());
         res.put("data", student);
         return ResponseEntity.ok().body(res);
     }
@@ -86,16 +94,16 @@ public class StudentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteStudent(@PathVariable long id){
-        Map<String, Object> res=new HashMap<String, Object>();
+        BaseResponse res = new BaseResponse();
         if(!studentService.isExist(id,1)){
-            res.put("status", Setting.request_item_not_found_code);
-            res.put("message", "Does not exist");
-            return ResponseEntity.badRequest().body(res);
+            res.setStatus_code(ResponseEnum.ResponseCode.NOT_FOUND.code());
+            res.setStatus_message(ResponseEnum.ResponseMessage.NOT_FOUND.message());
+            return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
         }
         long syskey = studentService.deleteStudent(id);
-        res.put("status", Setting.success_code);
-        res.put("message", "Successfully deleted");
-        res.put("syskey", syskey);
+        res.setStatus_code(ResponseEnum.ResponseCode.SUCCESS.code());
+        res.setStatus_message(ResponseEnum.ResponseMessage.DELETE_SUCCESS.message());
+        res.setSyskey(syskey);
         return ResponseEntity.ok().body(res);
     }
 }
