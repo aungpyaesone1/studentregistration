@@ -107,6 +107,11 @@ public class StudentController {
         return ResponseEntity.ok().body(res);
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<?> test(){
+        return ResponseEntity.ok().body("test");
+    }
+
     @GetMapping("test1")
     public ResponseEntity<?> test1(){
         return ResponseEntity.ok().body("Test1");
